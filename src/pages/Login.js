@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchAPI } from "../services";
+import { Link } from 'react-router-dom';
+import { fetchAPI } from '../services';
 import { sendToken } from '../redux/actions';
 // import { GamePage } from '../pages/GamePage';
 
@@ -30,12 +32,14 @@ class Login extends Component {
     }, this.activateButton);
   }
 
-  activateButton() {
-    if (this.checkIfAllFulfilled() && this.checkEmail()) {
-      this.setState({ isDisabled: false });
-    } else {
-      this.setState({ isDisabled: true });
-    }
+  async onSubmitClick(e) {
+    e.preventDefault();
+    const { dispatchToken, history } = this.props;
+    const response = await fetchAPI();
+    const { token } = response;
+    localStorage.setItem('token', token);
+    dispatchToken(token);
+    history.push('/game');
   }
 
   checkEmail() {
@@ -49,21 +53,20 @@ class Login extends Component {
     return false;
   }
 
+  activateButton() {
+    if (this.checkIfAllFulfilled() && this.checkEmail()) {
+      this.setState({ isDisabled: false });
+    } else {
+      this.setState({ isDisabled: true });
+    }
+  }
+
   checkIfAllFulfilled() {
     const { userName, email } = this.state;
 
     if (userName && email) {
       return true;
     } return false;
-  }
-
-  async onSubmitClick(e) {
-    e.preventDefault();
-    const { dispatchToken } = this.props;
-    const response = await fetchAPI();
-    const { token } = response;
-    localStorage.setItem('token', token);
-    dispatchToken(token);
   }
 
   render() {
@@ -91,7 +94,6 @@ class Login extends Component {
             defaultValue={ email }
           />
         </label>
-
         <button
           className="login-form-button"
           disabled={ isDisabled }
@@ -99,6 +101,7 @@ class Login extends Component {
           type="submit"
           onClick={ this.onSubmitClick }
         >
+
           Jogar
         </button>
       </form>
@@ -106,8 +109,15 @@ class Login extends Component {
   }
 }
 
+Login.propTypes = {
+  dispatchToken: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
 const mapDispatchToProps = (dispatch) => ({
-  dispatchToken: (token) => dispatch(sendToken(token))
+  dispatchToken: (token) => dispatch(sendToken(token)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
