@@ -1,6 +1,6 @@
-export const DEFAULT_ACTION = 'DEFAULT_ACTION';
+export const SET_TOKEN = 'SET_TOKEN';
 
-export const lalaland = (payload) => ({
-  type: DEFAULT_ACTION,
+export const sendToken = (payload) => ({
+  type: SET_TOKEN,
   payload,
 });
