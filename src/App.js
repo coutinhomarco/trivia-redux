@@ -4,6 +4,7 @@ import logo from './trivia.png';
 import Login from './pages/Login';
 import Configuracoes from './pages/Configuracoes';
 import './App.css';
+import GamePage from './pages/GamePage';
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <img src={ logo } className="App-logo" alt="logo" />
         <Switch>
           <Route path="/configuracoes" component={ Configuracoes } />
+          <Route path="/game" component={ GamePage } />
           <Route path="/" component={ Login } />
         </Switch>
       </header>
