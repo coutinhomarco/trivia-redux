@@ -1,7 +1,9 @@
-import { SET_TOKEN } from '../actions';
+import { SET_TOKEN, SET_USER_INFO } from '../actions';
 
 const INITIAL_STATE = {
   token: '',
+  name: '',
+  email: '',
 };
 
 function login(state = INITIAL_STATE, action) {
@@ -10,6 +12,12 @@ function login(state = INITIAL_STATE, action) {
     return {
       ...state,
       token: action.payload,
+    };
+  case SET_USER_INFO:
+    return {
+      ...state,
+      name: action.payload.userName,
+      email: action.payload.email,
     };
   default:
     return state;
