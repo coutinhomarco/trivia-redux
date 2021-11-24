@@ -6,7 +6,7 @@ class GamePage extends Component {
   render() {
     return (
       <Header />
-    )
+    );
   }
 }
 
