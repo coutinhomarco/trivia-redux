@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchAPI } from "../services";
+import { fetchAPI } from '../services';
 import { sendToken, sendUserInfo } from '../redux/actions';
 // import { GamePage } from '../pages/GamePage';
 
@@ -30,12 +31,22 @@ class Login extends Component {
     }, this.activateButton);
   }
 
-  activateButton() {
-    if (this.checkIfAllFulfilled() && this.checkEmail()) {
-      this.setState({ isDisabled: false });
-    } else {
-      this.setState({ isDisabled: true });
-    }
+  async onSubmitClick(e) {
+    e.preventDefault();
+    const { dispatchToken, dispatchUserInfo } = this.props;
+    const response = await fetchAPI();
+    const { token } = response;
+    localStorage.setItem('token', token);
+    dispatchUserInfo(this.state);
+    dispatchToken(token);
+  }
+
+  checkIfAllFulfilled() {
+    const { userName, email } = this.state;
+
+    if (userName && email) {
+      return true;
+    } return false;
   }
 
   checkEmail() {
@@ -49,22 +60,12 @@ class Login extends Component {
     return false;
   }
 
-  checkIfAllFulfilled() {
-    const { userName, email } = this.state;
-
-    if (userName && email) {
-      return true;
-    } return false;
-  }
-
-  async onSubmitClick(e) {
-    e.preventDefault();
-    const { dispatchToken, dispatchUserInfo } = this.props;
-    const response = await fetchAPI();
-    const { token } = response;
-    localStorage.setItem('token', token);
-    dispatchUserInfo(this.state);
-    dispatchToken(token);
+  activateButton() {
+    if (this.checkIfAllFulfilled() && this.checkEmail()) {
+      this.setState({ isDisabled: false });
+    } else {
+      this.setState({ isDisabled: true });
+    }
   }
 
   render() {
@@ -106,6 +107,11 @@ class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  dispatchToken: PropTypes.func.isRequired,
+  dispatchUserInfo: PropTypes.func.isRequired,
+};
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchToken: (token) => dispatch(sendToken(token)),
