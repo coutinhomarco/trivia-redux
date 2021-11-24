@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { fetchAPI } from "../services";
+import { sendToken } from '../redux/actions';
+// import { GamePage } from '../pages/GamePage';
 
 class Login extends Component {
   constructor() {
@@ -15,6 +18,7 @@ class Login extends Component {
     this.activateButton = this.activateButton.bind(this);
     this.checkIfAllFulfilled = this.checkIfAllFulfilled.bind(this);
     this.checkEmail = this.checkEmail.bind(this);
+    this.onSubmitClick = this.onSubmitClick.bind(this);
   }
 
   onInputChange({ target }) {
@@ -53,6 +57,15 @@ class Login extends Component {
     } return false;
   }
 
+  async onSubmitClick(e) {
+    e.preventDefault();
+    const { dispatchToken } = this.props;
+    const response = await fetchAPI();
+    const { token } = response;
+    localStorage.setItem('token', token);
+    dispatchToken(token);
+  }
+
   render() {
     const { userName, email, isDisabled } = this.state;
     return (
@@ -64,7 +77,7 @@ class Login extends Component {
             name="userName"
             type="text"
             required
-            value={ userName }
+            defaultValue={ userName }
           />
         </label>
 
@@ -75,7 +88,7 @@ class Login extends Component {
             name="email"
             type="email"
             required
-            value={ email }
+            defaultValue={ email }
           />
         </label>
 
@@ -84,6 +97,7 @@ class Login extends Component {
           disabled={ isDisabled }
           data-testid="btn-play"
           type="submit"
+          onClick={ this.onSubmitClick }
         >
           Jogar
         </button>
@@ -92,4 +106,8 @@ class Login extends Component {
   }
 }
 
-export default connect(null, null)(Login);
+const mapDispatchToProps = (dispatch) => ({
+  dispatchToken: (token) => dispatch(sendToken(token))
+});
+
+export default connect(null, mapDispatchToProps)(Login);

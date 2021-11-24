@@ -1,7 +1,16 @@
-const INITIAL_STATE = {};
+import { SET_TOKEN } from '../actions';
+
+const INITIAL_STATE = {
+  token: '',
+};
 
 function login(state = INITIAL_STATE, action) {
   switch (action.type) {
+  case SET_TOKEN:
+    return {
+      ...state,
+      token: action.payload,
+    };
   default:
     return state;
   }
