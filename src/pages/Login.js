@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchAPI } from "../services";
-import { sendToken } from '../redux/actions';
+import { sendToken, sendUserInfo } from '../redux/actions';
 // import { GamePage } from '../pages/GamePage';
 
 class Login extends Component {
@@ -59,10 +59,11 @@ class Login extends Component {
 
   async onSubmitClick(e) {
     e.preventDefault();
-    const { dispatchToken } = this.props;
+    const { dispatchToken, dispatchUserInfo } = this.props;
     const response = await fetchAPI();
     const { token } = response;
     localStorage.setItem('token', token);
+    dispatchUserInfo(this.state);
     dispatchToken(token);
   }
 
@@ -107,7 +108,8 @@ class Login extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  dispatchToken: (token) => dispatch(sendToken(token))
+  dispatchToken: (token) => dispatch(sendToken(token)),
+  dispatchUserInfo: (state) => dispatch(sendUserInfo(state)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
