@@ -33,12 +33,13 @@ class Login extends Component {
 
   async onSubmitClick(e) {
     e.preventDefault();
-    const { dispatchToken, dispatchUserInfo } = this.props;
+    const { dispatchToken, dispatchUserInfo, history } = this.props;
     const response = await fetchAPI();
     const { token } = response;
     localStorage.setItem('token', token);
     dispatchUserInfo(this.state);
     dispatchToken(token);
+    history.push('/game');
   }
 
   checkIfAllFulfilled() {
@@ -111,6 +112,9 @@ class Login extends Component {
 Login.propTypes = {
   dispatchToken: PropTypes.func.isRequired,
   dispatchUserInfo: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
