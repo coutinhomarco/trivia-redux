@@ -12,7 +12,7 @@ export default function App() {
       <header className="App-header">
         <img src={ logo } className="App-logo" alt="logo" />
         <Switch>
-          <Route path="/Settings" component={ Settings } />
+          <Route path="/settings" component={ Settings } />
           <Route path="/game" component={ GamePage } />
           <Route path="/" component={ Login } />
         </Switch>
