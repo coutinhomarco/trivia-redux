@@ -3,21 +3,38 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { dispatchGame } from '../redux/actions';
 
+const ONE_SECOND = 1000;
 class Trivia extends Component {
   constructor() {
     super();
     this.state = {
       questionIndex: 0,
       points: 0,
-
+      timer: 30,
     };
     this.renderQuestions = this.renderQuestions.bind(this);
     this.changeBorderColor = this.changeBorderColor.bind(this);
+    this.countTime = this.countTime.bind(this);
+    this.resetTimer = this.resetTimer.bind(this);
   }
 
   componentDidMount() {
     const { dispatchRequest } = this.props;
+    this.countTime();
     dispatchRequest();
+  }
+
+  countTime() {
+    const { timer } = this.state;
+    if (timer >= 0) {
+      setInterval(() => this.setState((prevState) => ({
+        timer: prevState.timer - 1,
+      })), ONE_SECOND);
+    }
+  }
+
+  resetTimer() {
+    this.setState({ timer: 30 });
   }
 
   changeBorderColor() {
@@ -33,6 +50,7 @@ class Trivia extends Component {
 
   checkAnswer(answer, questions, questionIndex) {
     this.changeBorderColor();
+    this.resetTimer();
     if (questions[questionIndex].correct_answer === answer) {
       this.setState(
         (prevState) => ({
@@ -89,8 +107,10 @@ class Trivia extends Component {
 
   render() {
     const { questions } = this.props;
+    const { timer } = this.state;
     return (
       <section>
+        <div>{ timer }</div>
         {
           questions ? this.renderQuestions() : null
         }
