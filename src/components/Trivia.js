@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { dispatchGame } from '../redux/actions';
 
+const NUMBER_OF_QUESTIONS = 4;
 class Trivia extends Component {
   constructor() {
     super();
@@ -12,6 +13,7 @@ class Trivia extends Component {
 
     };
     this.renderQuestions = this.renderQuestions.bind(this);
+    this.renderNextQuestion = this.renderNextQuestion.bind(this);
   }
 
   componentDidMount() {
@@ -20,6 +22,7 @@ class Trivia extends Component {
   }
 
   checkAnswer(answer, questions, questionIndex) {
+    this.renderNextQuestion(questionIndex);
     if (questions[questionIndex].correct_answer === answer) {
       this.setState(
         (prevState) => ({
@@ -29,9 +32,23 @@ class Trivia extends Component {
     }
   }
 
+  renderNextQuestion(questionIndex) {
+    if (questionIndex <= NUMBER_OF_QUESTIONS) {
+      this.setState(
+        (prevState) => ({
+          questionIndex: prevState.questionIndex + 1,
+        }),
+      );
+    }
+  }
+
   renderQuestions() {
     const { questionIndex } = this.state;
-    const { questions } = this.props;
+    const { questions, history } = this.props;
+    if (questionIndex === NUMBER_OF_QUESTIONS + 1) {
+      history.push('/feedback');
+      return '';
+    }
     const correctAnswer = questions[questionIndex].correct_answer;
     const incorrectAnswers = questions[questionIndex].incorrect_answers;
     const answers = [
@@ -77,7 +94,9 @@ class Trivia extends Component {
     return (
       <section>
         {
-          questions ? this.renderQuestions() : null
+          questions ? (
+            this.renderQuestions()
+          ) : null
         }
 
       </section>
@@ -90,12 +109,20 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
+  ...state,
   questions: state.trivia.questions,
 });
 
 Trivia.propTypes = {
   dispatchRequest: PropTypes.func.isRequired,
-  questions: PropTypes.arrayOf().isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  questions: PropTypes.arrayOf(PropTypes.any),
+};
+
+Trivia.defaultProps = {
+  questions: null,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Trivia);
