@@ -19,20 +19,20 @@ class Trivia extends Component {
     const { dispatchRequest } = this.props;
     dispatchRequest();
   }
-  
+
   changeBorderColor() {
     const correctAnswer = document.getElementsByClassName('correct-answer');
     const incorrectAnswers = [
-      ...document.getElementsByClassName('incorrect-answer')
-    ]
+      ...document.getElementsByClassName('incorrect-answer'),
+    ];
     correctAnswer[0].className = 'correct-answer-color';
     incorrectAnswers.forEach((incorrectAnswer) => {
       incorrectAnswer.className = 'incorrect-answer-color';
-    })
+    });
   }
 
   checkAnswer(answer, questions, questionIndex) {
-    this.changeBorderColor()
+    this.changeBorderColor();
     if (questions[questionIndex].correct_answer === answer) {
       this.setState(
         (prevState) => ({
