@@ -34,7 +34,7 @@ class Login extends Component {
 
   onSettingsClick() {
     const { history } = this.props;
-    history.push('/configuracoes');
+    history.push('/settings');
   }
 
   async onSubmitClick(e) {
