@@ -11,30 +11,32 @@ class Trivia extends Component {
       questionIndex: 0,
       points: 0,
       timer: 30,
+      isDisabled: false,
     };
     this.renderQuestions = this.renderQuestions.bind(this);
     this.changeBorderColor = this.changeBorderColor.bind(this);
-    this.countTime = this.countTime.bind(this);
-    this.resetTimer = this.resetTimer.bind(this);
+    this.startTimer = this.startTimer.bind(this);
   }
 
   componentDidMount() {
     const { dispatchRequest } = this.props;
-    this.countTime();
+    this.startTimer();
     dispatchRequest();
   }
 
-  countTime() {
-    const { timer } = this.state;
-    if (timer >= 0) {
-      setInterval(() => this.setState((prevState) => ({
-        timer: prevState.timer - 1,
-      })), ONE_SECOND);
-    }
-  }
-
-  resetTimer() {
-    this.setState({ timer: 30 });
+  // Source: https://stackoverflow.com/a/49471404
+  startTimer() {
+    const timerInterval = setInterval(() => {
+      const { timer } = this.state;
+      if (timer === 0) {
+        clearInterval(timerInterval);
+        this.setState({ isDisabled: true });
+      } else {
+        this.setState((prevState) => ({
+          timer: prevState.timer - 1,
+        }));
+      }
+    }, ONE_SECOND);
   }
 
   changeBorderColor() {
@@ -50,7 +52,6 @@ class Trivia extends Component {
 
   checkAnswer(answer, questions, questionIndex) {
     this.changeBorderColor();
-    this.resetTimer();
     if (questions[questionIndex].correct_answer === answer) {
       this.setState(
         (prevState) => ({
@@ -61,7 +62,7 @@ class Trivia extends Component {
   }
 
   renderQuestions() {
-    const { questionIndex } = this.state;
+    const { questionIndex, isDisabled } = this.state;
     const { questions } = this.props;
     const correctAnswer = questions[questionIndex].correct_answer;
     const incorrectAnswers = questions[questionIndex].incorrect_answers;
@@ -83,6 +84,7 @@ class Trivia extends Component {
                   onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
                   type="button"
                   data-testid="correct-answer"
+                  disabled={ isDisabled }
                 >
                   {answer}
                 </button>
@@ -96,6 +98,7 @@ class Trivia extends Component {
               onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
               type="button"
               data-testid={ `wrong-answer-${incorrectAnswers.indexOf(answer)}` }
+              disabled={ isDisabled }
             >
               {answer}
             </button>
