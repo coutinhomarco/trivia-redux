@@ -20,6 +20,7 @@ class Login extends Component {
     this.checkIfAllFulfilled = this.checkIfAllFulfilled.bind(this);
     this.checkEmail = this.checkEmail.bind(this);
     this.onSubmitClick = this.onSubmitClick.bind(this);
+    this.onClickBtn = this.onClickBtn.bind(this);
   }
 
   onInputChange({ target }) {
@@ -29,6 +30,11 @@ class Login extends Component {
     this.setState({
       [name]: value,
     }, this.activateButton);
+  }
+
+  onClickBtn() {
+    const { history } = this.props;
+    history.push('/configuracoes');
   }
 
   async onSubmitClick(e) {
@@ -103,6 +109,14 @@ class Login extends Component {
           onClick={ this.onSubmitClick }
         >
           Jogar
+        </button>
+
+        <button
+          type="button"
+          data-testid="btn-settings"
+          onClick={ this.onClickBtn }
+        >
+          Configurações
         </button>
       </form>
     );
