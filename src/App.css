@@ -65,3 +65,11 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.correct-answer-color {
+  border: 3px solid rgb(6, 240, 15);
+}
+
+.incorrect-answer-color {
+  border: 3px solid rgb(255, 0, 0);
+}
