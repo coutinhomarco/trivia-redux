@@ -32,23 +32,42 @@ class Trivia extends Component {
   renderQuestions() {
     const { questionIndex } = this.state;
     const { questions } = this.props;
+    const correctAnswer = questions[questionIndex].correct_answer;
+    const incorrectAnswers = questions[questionIndex].incorrect_answers;
     const answers = [
-      ...questions[questionIndex].incorrect_answers,
-      questions[questionIndex].correct_answer,
+      ...incorrectAnswers,
+      correctAnswer,
     ];
     return (
       <>
         <p data-testid="question-category">{questions[questionIndex].category}</p>
         <p data-testid="question-text">{questions[questionIndex].question}</p>
-        {answers.sort().map((answer, index) => (
-          <button
-            key={ index }
-            onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
-            type="button"
-          >
-            {answer}
-          </button>
-        ))}
+        {answers.sort().map((answer, index) => {
+          if (answer === correctAnswer) {
+            return (
+              (
+                <button
+                  key={ index }
+                  onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
+                  type="button"
+                  data-testid="correct-answer"
+                >
+                  {answer}
+                </button>
+              )
+            );
+          }
+          return (
+            <button
+              key={ index }
+              onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
+              type="button"
+              data-testid={ `wrong-answer-${incorrectAnswers.indexOf(answer)}` }
+            >
+              {answer}
+            </button>
+          );
+        })}
       </>
     );
   }
