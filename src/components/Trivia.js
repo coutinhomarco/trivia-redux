@@ -14,6 +14,7 @@ class Trivia extends Component {
     };
     this.renderQuestions = this.renderQuestions.bind(this);
     this.renderNextQuestion = this.renderNextQuestion.bind(this);
+    this.changeBorderColor = this.changeBorderColor.bind(this);
   }
 
   componentDidMount() {
@@ -21,8 +22,20 @@ class Trivia extends Component {
     dispatchRequest();
   }
 
+  changeBorderColor() {
+    const correctAnswer = document.getElementsByClassName('correct-answer');
+    const incorrectAnswers = [
+      ...document.getElementsByClassName('incorrect-answer'),
+    ];
+    correctAnswer[0].className = 'correct-answer-color';
+    incorrectAnswers.forEach((incorrectAnswer) => {
+      incorrectAnswer.className = 'incorrect-answer-color';
+    });
+  }
+
   checkAnswer(answer, questions, questionIndex) {
     this.renderNextQuestion(questionIndex);
+    this.changeBorderColor();
     if (questions[questionIndex].correct_answer === answer) {
       this.setState(
         (prevState) => ({
@@ -64,6 +77,7 @@ class Trivia extends Component {
             return (
               (
                 <button
+                  className="correct-answer"
                   key={ index }
                   onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
                   type="button"
@@ -76,6 +90,7 @@ class Trivia extends Component {
           }
           return (
             <button
+              className="incorrect-answer"
               key={ index }
               onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
               type="button"
