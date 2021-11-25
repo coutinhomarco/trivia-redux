@@ -20,7 +20,7 @@ class Login extends Component {
     this.checkIfAllFulfilled = this.checkIfAllFulfilled.bind(this);
     this.checkEmail = this.checkEmail.bind(this);
     this.onSubmitClick = this.onSubmitClick.bind(this);
-    this.onClickBtn = this.onClickBtn.bind(this);
+    this.onSettingsClick = this.onSettingsClick.bind(this);
   }
 
   onInputChange({ target }) {
@@ -32,7 +32,7 @@ class Login extends Component {
     }, this.activateButton);
   }
 
-  onClickBtn() {
+  onSettingsClick() {
     const { history } = this.props;
     history.push('/configuracoes');
   }
@@ -114,7 +114,7 @@ class Login extends Component {
         <button
           type="button"
           data-testid="btn-settings"
-          onClick={ this.onClickBtn }
+          onClick={ this.onSettingsClick }
         >
           Configurações
         </button>
