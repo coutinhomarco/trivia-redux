@@ -5,3 +5,11 @@ export const fetchAPI = async () => {
   const responseJSON = await response.json();
   return responseJSON;
 };
+
+export const fetchAPIGame = async () => {
+  const token = localStorage.getItem('token');
+  const endpointGame = `https://opentdb.com/api.php?amount=5&token=${token}`;
+  const response = await fetch(endpointGame);
+  const responseJSON = await response.json();
+  return responseJSON;
+};
