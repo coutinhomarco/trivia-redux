@@ -33,8 +33,7 @@ class Header extends Component {
         />
         <p data-testid="header-player-name">{name}</p>
         <p data-testid="header-score">
-          Pontos:
-          { score }
+          {`Pontos: ${score}` }
         </p>
       </header>
     );

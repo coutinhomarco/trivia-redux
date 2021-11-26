@@ -18,6 +18,7 @@ class Trivia extends Component {
       nextBtn: false,
     };
     this.renderQuestions = this.renderQuestions.bind(this);
+    this.renderNextQuestion = this.renderNextQuestion.bind(this);
     this.changeBorderColor = this.changeBorderColor.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.changeLocalStorage = this.changeLocalStorage.bind(this);
@@ -158,8 +159,7 @@ class Trivia extends Component {
           timer: 30,
         }),
       );
-    }
-    this.startTimer();
+    } this.startTimer();
   }
 
   renderQuestions() {
