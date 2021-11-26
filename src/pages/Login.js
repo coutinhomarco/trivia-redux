@@ -10,7 +10,7 @@ class Login extends Component {
     super();
 
     this.state = {
-      userName: '',
+      name: '',
       email: '',
       isDisabled: true,
     };
@@ -49,9 +49,9 @@ class Login extends Component {
   }
 
   checkIfAllFulfilled() {
-    const { userName, email } = this.state;
+    const { name, email } = this.state;
 
-    if (userName && email) {
+    if (name && email) {
       return true;
     } return false;
   }
@@ -76,17 +76,17 @@ class Login extends Component {
   }
 
   render() {
-    const { userName, email, isDisabled } = this.state;
+    const { name, email, isDisabled } = this.state;
     return (
       <form className="login-form" onChange={ this.onInputChange }>
         <label htmlFor="name">
           <input
             data-testid="input-player-name"
             id="name"
-            name="userName"
+            name="name"
             type="text"
             required
-            defaultValue={ userName }
+            defaultValue={ name }
           />
         </label>
 

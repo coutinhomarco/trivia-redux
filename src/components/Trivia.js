@@ -10,39 +10,65 @@ class Trivia extends Component {
     this.state = {
       questionIndex: 0,
       points: 0,
+      score: 0,
       timer: 30,
       isDisabled: false,
+      answer: false,
     };
     this.renderQuestions = this.renderQuestions.bind(this);
     this.changeBorderColor = this.changeBorderColor.bind(this);
     this.startTimer = this.startTimer.bind(this);
+    this.changeLocalStorage = this.changeLocalStorage.bind(this);
   }
 
   componentDidMount() {
-    const { dispatchRequest } = this.props;
+    const { login, dispatchRequest } = this.props;
+    const { name, gravatar: gravatarEmail } = login;
+    const { points, score } = this.state;
     this.startTimer();
     dispatchRequest();
-  }
-
-  componentWillUnmount() {
-    const { login } = this.props;
-    const { userName, assertions, gravatar: gravatarEmail } = login;
-    const player = {
-      name: userName,
-      assertions,
-      score: '0',
-      gravatarEmail,
+    const state = {
+      player: {
+        name,
+        assertions: points,
+        score,
+        gravatarEmail,
+      },
     };
-    localStorage.setItem('player', JSON.stringify(player));
+    localStorage.setItem('state', JSON.stringify(state));
   }
 
+  changeLocalStorage() {
+    const { login } = this.props;
+    const { name, gravatar: gravatarEmail } = login;
+    const { points, score } = this.state;
+    const state = {
+      player: {
+        name,
+        assertions: points,
+        score,
+        gravatarEmail,
+      },
+    };
+    localStorage.setItem('state', JSON.stringify(state));
   // Source: https://stackoverflow.com/a/49471404
+  }
+
+  stopTimer() {
+    this.setState({
+      answer: true,
+    });
+  }
+
   startTimer() {
     const timerInterval = setInterval(() => {
-      const { timer } = this.state;
-      if (timer === 0) {
+      const { timer, answer } = this.state;
+      if (timer === 0 || answer) {
         clearInterval(timerInterval);
-        this.setState({ isDisabled: true });
+        this.setState({
+          isDisabled: true,
+          answer: false,
+        });
       } else {
         this.setState((prevState) => ({
           timer: prevState.timer - 1,
@@ -63,15 +89,30 @@ class Trivia extends Component {
   }
 
   checkAnswer(answer, questions, questionIndex) {
+    this.stopTimer();
     this.changeBorderColor();
+    const { timer } = this.state;
     if (questions[questionIndex].correct_answer === answer) {
+      const { difficulty } = questions[questionIndex];
+      const checkDifficulty = {
+        easy: 1,
+        medium: 2,
+        hard: 3,
+      };
+      const basePoints = 10;
+      const correctCalc = basePoints + (checkDifficulty[difficulty] * timer);
       this.setState(
         (prevState) => ({
           points: prevState.points + 1,
+          score: prevState.score + correctCalc,
         }), () => {
-          const { points } = this.state;
+          const { points, score } = this.state;
           const { dispatchAssertions } = this.props;
-          dispatchAssertions({ assertions: points });
+          dispatchAssertions({
+            assertions: points,
+            score,
+          });
+          this.changeLocalStorage();
         },
       );
     }
@@ -156,7 +197,7 @@ Trivia.propTypes = {
     assertions: PropTypes.number,
     gravatar: PropTypes.string,
     gravatarEmail: PropTypes.string,
-    userName: PropTypes.string,
+    name: PropTypes.string,
   }).isRequired,
   questions: PropTypes.arrayOf().isRequired,
 };
