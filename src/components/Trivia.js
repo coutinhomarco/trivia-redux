@@ -14,11 +14,13 @@ class Trivia extends Component {
       timer: 30,
       isDisabled: false,
       answer: false,
+      nextBtn: false,
     };
     this.renderQuestions = this.renderQuestions.bind(this);
     this.changeBorderColor = this.changeBorderColor.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.changeLocalStorage = this.changeLocalStorage.bind(this);
+    this.renderNextBtn = this.renderNextBtn.bind(this);
   }
 
   componentDidMount() {
@@ -91,6 +93,7 @@ class Trivia extends Component {
   checkAnswer(answer, questions, questionIndex) {
     this.stopTimer();
     this.changeBorderColor();
+    this.setState({ nextBtn: true });
     const { timer } = this.state;
     if (questions[questionIndex].correct_answer === answer) {
       const { difficulty } = questions[questionIndex];
@@ -118,8 +121,14 @@ class Trivia extends Component {
     }
   }
 
+  renderNextBtn() {
+    return (
+      <button type="button" onClick={ this.renderNextQuestion }>Próximo</button>
+    );
+  }
+
   renderQuestions() {
-    const { questionIndex, isDisabled } = this.state;
+    const { questionIndex, isDisabled, nextBtn } = this.state;
     const { questions } = this.props;
     const correctAnswer = questions[questionIndex].correct_answer;
     const incorrectAnswers = questions[questionIndex].incorrect_answers;
@@ -131,36 +140,39 @@ class Trivia extends Component {
       <>
         <p data-testid="question-category">{questions[questionIndex].category}</p>
         <p data-testid="question-text">{questions[questionIndex].question}</p>
-        {answers.sort().map((answer, index) => {
-          if (answer === correctAnswer) {
+        <div className="answers-container">
+          {answers.sort().map((answer, index) => {
+            if (answer === correctAnswer) {
+              return (
+                (
+                  <button
+                    className="correct-answer"
+                    key={ index }
+                    onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
+                    type="button"
+                    data-testid="correct-answer"
+                    disabled={ isDisabled }
+                  >
+                    {answer}
+                  </button>
+                )
+              );
+            }
             return (
-              (
-                <button
-                  className="correct-answer"
-                  key={ index }
-                  onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
-                  type="button"
-                  data-testid="correct-answer"
-                  disabled={ isDisabled }
-                >
-                  {answer}
-                </button>
-              )
+              <button
+                className="incorrect-answer"
+                key={ index }
+                onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
+                type="button"
+                data-testid={ `wrong-answer-${incorrectAnswers.indexOf(answer)}` }
+                disabled={ isDisabled }
+              >
+                {answer}
+              </button>
             );
-          }
-          return (
-            <button
-              className="incorrect-answer"
-              key={ index }
-              onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
-              type="button"
-              data-testid={ `wrong-answer-${incorrectAnswers.indexOf(answer)}` }
-              disabled={ isDisabled }
-            >
-              {answer}
-            </button>
-          );
-        })}
+          })}
+        </div>
+        { nextBtn ? this.renderNextBtn() : null }
       </>
     );
   }
