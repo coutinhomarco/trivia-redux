@@ -16,8 +16,7 @@ function login(state = INITIAL_STATE, action) {
   case SET_USER_INFO:
     return {
       ...state,
-      name: action.payload.userName,
-      email: action.payload.email,
+      ...action.payload,
     };
   default:
     return state;

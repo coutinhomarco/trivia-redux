@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { dispatchGame } from '../redux/actions';
+import { dispatchGame, sendUserInfo } from '../redux/actions';
 
 const ONE_SECOND = 1000;
 class Trivia extends Component {
@@ -24,6 +24,17 @@ class Trivia extends Component {
     dispatchRequest();
   }
 
+  componentWillUnmount() {
+    const { login } = this.props;
+    const { userName, assertions, gravatar: gravatarEmail } = login;
+    const player = {
+      name: userName,
+      assertions,
+      score: '0',
+      gravatarEmail,
+    };
+    localStorage.setItem('player', JSON.stringify(player));
+=======
   // Source: https://stackoverflow.com/a/49471404
   startTimer() {
     const timerInterval = setInterval(() => {
@@ -56,7 +67,11 @@ class Trivia extends Component {
       this.setState(
         (prevState) => ({
           points: prevState.points + 1,
-        }),
+        }), () => {
+          const { points } = this.state;
+          const { dispatchAssertions } = this.props;
+          dispatchAssertions({ assertions: points });
+        },
       );
     }
   }
@@ -125,14 +140,23 @@ class Trivia extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchRequest: () => dispatch(dispatchGame()),
+  dispatchAssertions: (state) => dispatch(sendUserInfo(state)),
 });
 
 const mapStateToProps = (state) => ({
+  login: state.login,
   questions: state.trivia.questions,
 });
 
 Trivia.propTypes = {
+  dispatchAssertions: PropTypes.func.isRequired,
   dispatchRequest: PropTypes.func.isRequired,
+  login: PropTypes.shape({
+    assertions: PropTypes.number,
+    gravatar: PropTypes.string,
+    gravatarEmail: PropTypes.string,
+    userName: PropTypes.string,
+  }).isRequired,
   questions: PropTypes.arrayOf().isRequired,
 };
 
