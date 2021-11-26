@@ -40,9 +40,19 @@ class Login extends Component {
   async onSubmitClick(e) {
     e.preventDefault();
     const { dispatchToken, dispatchUserInfo, history } = this.props;
+    const { userName, email } = this.state;
     const response = await fetchAPI();
     const { token } = response;
+    const userState = {
+      player: {
+        name: userName,
+        assertions: 0,
+        score: 0,
+        gravatarEmail: email,
+      },
+    };
     localStorage.setItem('token', token);
+    localStorage.setItem('state', userState);
     dispatchUserInfo(this.state);
     dispatchToken(token);
     history.push('/game');
