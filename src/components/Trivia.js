@@ -126,10 +126,7 @@ class Trivia extends Component {
         }), () => {
           const { points, score } = this.state;
           const { dispatchAssertions } = this.props;
-          dispatchAssertions({
-            assertions: points,
-            score,
-          });
+          dispatchAssertions({ assertions: points, score });
           this.changeLocalStorage();
         },
       );
@@ -157,6 +154,7 @@ class Trivia extends Component {
           questionIndex: prevState.questionIndex + 1,
           isDisabled: false,
           timer: 30,
+          nextBtn: false,
         }),
       );
     } this.startTimer();
