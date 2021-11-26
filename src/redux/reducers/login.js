@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   token: '',
   name: '',
   email: '',
+  score: 0,
 };
 
 function login(state = INITIAL_STATE, action) {
