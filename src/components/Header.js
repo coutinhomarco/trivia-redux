@@ -31,7 +31,7 @@ class Header extends Component {
           alt="Avatar"
         />
         <p data-testid="header-player-name">{name}</p>
-        <p data-testid="header-score">0</p>
+        <p data-testid="header-score">Pontos: 0</p>
       </header>
     );
   }
