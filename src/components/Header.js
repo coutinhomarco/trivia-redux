@@ -17,11 +17,12 @@ class Header extends Component {
   componentDidMount() {
     const { dispatchGravatar } = this.props;
     const { gravatarLink } = this.state;
+    console.log(this.props);
     dispatchGravatar({ gravatar: gravatarLink });
   }
 
   render() {
-    const { name } = this.props;
+    const { name, score } = this.props;
     const { gravatarLink } = this.state;
     return (
       <header>
@@ -31,7 +32,10 @@ class Header extends Component {
           alt="Avatar"
         />
         <p data-testid="header-player-name">{name}</p>
-        <p data-testid="header-score">Pontos: 0</p>
+        <p data-testid="header-score">
+          Pontos:
+          { score }
+        </p>
       </header>
     );
   }
@@ -40,6 +44,7 @@ class Header extends Component {
 const mapStateToProps = (state) => ({
   email: state.login.email,
   name: state.login.name,
+  score: state.login.score,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -50,6 +55,7 @@ Header.propTypes = {
   dispatchGravatar: PropTypes.func.isRequired,
   email: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

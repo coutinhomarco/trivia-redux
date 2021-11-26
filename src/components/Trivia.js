@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { dispatchGame, sendUserInfo } from '../redux/actions';
 
 const ONE_SECOND = 1000;
+const NUMBER_OF_QUESTIONS = 4;
 class Trivia extends Component {
   constructor() {
     super();
@@ -21,6 +22,7 @@ class Trivia extends Component {
     this.startTimer = this.startTimer.bind(this);
     this.changeLocalStorage = this.changeLocalStorage.bind(this);
     this.renderNextBtn = this.renderNextBtn.bind(this);
+    this.renderNextQuestion = this.renderNextQuestion.bind(this);
   }
 
   componentDidMount() {
@@ -53,7 +55,6 @@ class Trivia extends Component {
       },
     };
     localStorage.setItem('state', JSON.stringify(state));
-  // Source: https://stackoverflow.com/a/49471404
   }
 
   stopTimer() {
@@ -66,17 +67,30 @@ class Trivia extends Component {
     const timerInterval = setInterval(() => {
       const { timer, answer } = this.state;
       if (timer === 0 || answer) {
+        // Source: https://stackoverflow.com/a/49471404
         clearInterval(timerInterval);
         this.setState({
           isDisabled: true,
           answer: false,
-        });
+          nextBtn: true,
+        }, () => this.changeBorderColor);
       } else {
         this.setState((prevState) => ({
           timer: prevState.timer - 1,
         }));
       }
     }, ONE_SECOND);
+  }
+
+  resetBorderColor() {
+    const correctAnswer = document.getElementsByClassName('correct-answer-color');
+    const incorrectAnswers = [
+      ...document.getElementsByClassName('incorrect-answer-color'),
+    ];
+    correctAnswer[0].className = 'correct-answer';
+    incorrectAnswers.forEach((incorrectAnswer) => {
+      incorrectAnswer.className = 'incorrect-answer';
+    });
   }
 
   changeBorderColor() {
@@ -122,59 +136,79 @@ class Trivia extends Component {
   }
 
   renderNextBtn() {
+    const { questionIndex } = this.state;
     return (
-      <button type="button" onClick={ this.renderNextQuestion }>Próximo</button>
+      <button
+        type="button"
+        onClick={ () => this.renderNextQuestion(questionIndex) }
+        data-testid="btn-next"
+      >
+        Próximo
+      </button>
     );
+  }
+
+  renderNextQuestion(questionIndex) {
+    this.resetBorderColor();
+    if (questionIndex <= NUMBER_OF_QUESTIONS) {
+      this.setState(
+        (prevState) => ({
+          questionIndex: prevState.questionIndex + 1,
+          isDisabled: false,
+          timer: 30,
+        }),
+      );
+    }
+    this.startTimer();
   }
 
   renderQuestions() {
     const { questionIndex, isDisabled, nextBtn } = this.state;
-    const { questions } = this.props;
-    const correctAnswer = questions[questionIndex].correct_answer;
-    const incorrectAnswers = questions[questionIndex].incorrect_answers;
-    const answers = [
-      ...incorrectAnswers,
-      correctAnswer,
-    ];
-    return (
-      <>
-        <p data-testid="question-category">{questions[questionIndex].category}</p>
-        <p data-testid="question-text">{questions[questionIndex].question}</p>
-        <div className="answers-container">
-          {answers.sort().map((answer, index) => {
-            if (answer === correctAnswer) {
+    const { questions, history } = this.props;
+    if (questionIndex <= NUMBER_OF_QUESTIONS) {
+      const correctAnswer = questions[questionIndex].correct_answer;
+      const incorrectAnswers = questions[questionIndex].incorrect_answers;
+      const answers = [...incorrectAnswers, correctAnswer];
+      return (
+        <>
+          <p data-testid="question-category">{questions[questionIndex].category}</p>
+          <p data-testid="question-text">{questions[questionIndex].question}</p>
+          <div className="answers-container">
+            {answers.sort().map((answer, index) => {
+              if (answer === correctAnswer) {
+                return (
+                  (
+                    <button
+                      className="correct-answer"
+                      key={ index }
+                      onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
+                      type="button"
+                      data-testid="correct-answer"
+                      disabled={ isDisabled }
+                    >
+                      {answer}
+                    </button>
+                  )
+                );
+              }
               return (
-                (
-                  <button
-                    className="correct-answer"
-                    key={ index }
-                    onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
-                    type="button"
-                    data-testid="correct-answer"
-                    disabled={ isDisabled }
-                  >
-                    {answer}
-                  </button>
-                )
+                <button
+                  className="incorrect-answer"
+                  key={ index }
+                  onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
+                  type="button"
+                  data-testid={ `wrong-answer-${incorrectAnswers.indexOf(answer)}` }
+                  disabled={ isDisabled }
+                >
+                  {answer}
+                </button>
               );
-            }
-            return (
-              <button
-                className="incorrect-answer"
-                key={ index }
-                onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
-                type="button"
-                data-testid={ `wrong-answer-${incorrectAnswers.indexOf(answer)}` }
-                disabled={ isDisabled }
-              >
-                {answer}
-              </button>
-            );
-          })}
-        </div>
-        { nextBtn ? this.renderNextBtn() : null }
-      </>
-    );
+            })}
+          </div>
+          { nextBtn ? this.renderNextBtn() : null }
+        </>
+      );
+    } history.push('/feedback');
   }
 
   render() {
@@ -183,10 +217,7 @@ class Trivia extends Component {
     return (
       <section>
         <div>{ timer }</div>
-        {
-          questions ? this.renderQuestions() : null
-        }
-
+        { questions ? this.renderQuestions() : null }
       </section>
     );
   }
@@ -212,6 +243,7 @@ Trivia.propTypes = {
     name: PropTypes.string,
   }).isRequired,
   questions: PropTypes.arrayOf().isRequired,
+  history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Trivia);
