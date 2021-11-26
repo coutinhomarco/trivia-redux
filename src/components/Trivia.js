@@ -34,7 +34,8 @@ class Trivia extends Component {
       gravatarEmail,
     };
     localStorage.setItem('player', JSON.stringify(player));
-=======
+  }
+
   // Source: https://stackoverflow.com/a/49471404
   startTimer() {
     const timerInterval = setInterval(() => {
