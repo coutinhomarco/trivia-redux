@@ -71,7 +71,7 @@ class Trivia extends Component {
         // Source: https://stackoverflow.com/a/49471404
         clearInterval(timerInterval);
         this.setState({
-          isDisabled: true,
+          // isDisabled: true,
           answer: false,
           nextBtn: true,
         }, () => this.changeBorderColor);
@@ -108,7 +108,10 @@ class Trivia extends Component {
   checkAnswer(answer, questions, questionIndex) {
     this.stopTimer();
     this.changeBorderColor();
-    this.setState({ nextBtn: true });
+    this.setState({
+      isDisabled: false,
+      nextBtn: true,
+    });
     const { timer } = this.state;
     if (questions[questionIndex].correct_answer === answer) {
       const { difficulty } = questions[questionIndex];
@@ -152,12 +155,12 @@ class Trivia extends Component {
       this.setState(
         (prevState) => ({
           questionIndex: prevState.questionIndex + 1,
-          isDisabled: false,
           timer: 30,
+          isDisabled: false,
           nextBtn: false,
         }),
       );
-    } this.startTimer();
+    }
   }
 
   renderQuestions() {
