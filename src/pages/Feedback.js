@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class Feedback extends Component {
   constructor() {
@@ -59,7 +60,13 @@ class Feedback extends Component {
           <p data-testid="header-player-name">{name}</p>
           <p data-testid="header-score">{score}</p>
         </header>
-        { this.renderMessage()}
+        <Link to="/">
+          <button type="button" data-testid="btn-play-again">Jogar novamente</button>
+        </Link>
+        <Link to="/ranking">
+          <button type="button" data-testid="btn-ranking">Ranking</button>
+        </Link>
+        { this.renderMessage() }
       </>
     );
   }
