@@ -15,7 +15,7 @@ class Trivia extends Component {
       timer: 30,
       isDisabled: false,
       answer: false,
-      nextBtn: false,
+      // nextBtn: false,
     };
     this.renderQuestions = this.renderQuestions.bind(this);
     this.renderNextQuestion = this.renderNextQuestion.bind(this);
@@ -73,8 +73,8 @@ class Trivia extends Component {
         this.setState({
           isDisabled: true,
           answer: false,
-          nextBtn: true,
-        }, () => this.changeBorderColor);
+
+        });
       } else {
         this.setState((prevState) => ({
           timer: prevState.timer - 1,
@@ -108,7 +108,10 @@ class Trivia extends Component {
   checkAnswer(answer, questions, questionIndex) {
     this.stopTimer();
     this.changeBorderColor();
-    this.setState({ nextBtn: true });
+    this.setState({
+      isDisabled: false,
+      // nextBtn: true,
+    });
     const { timer } = this.state;
     if (questions[questionIndex].correct_answer === answer) {
       const { difficulty } = questions[questionIndex];
@@ -152,16 +155,15 @@ class Trivia extends Component {
       this.setState(
         (prevState) => ({
           questionIndex: prevState.questionIndex + 1,
-          isDisabled: false,
           timer: 30,
-          nextBtn: false,
-        }),
+          isDisabled: false,
+        }), this.startTimer(),
       );
-    } this.startTimer();
+    }
   }
 
   renderQuestions() {
-    const { questionIndex, isDisabled, nextBtn } = this.state;
+    const { questionIndex, isDisabled } = this.state;
     const { questions, history } = this.props;
     if (questionIndex <= NUMBER_OF_QUESTIONS) {
       const correctAnswer = questions[questionIndex].correct_answer;
@@ -203,7 +205,7 @@ class Trivia extends Component {
               );
             })}
           </div>
-          { nextBtn ? this.renderNextBtn() : null }
+          { isDisabled ? this.renderNextBtn() : null }
         </>
       );
     } history.push('/feedback');

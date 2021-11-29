@@ -7,6 +7,7 @@ class Feedback extends Component {
       name: '',
       score: 0,
       gravatarEmail: '',
+      assertions: 0,
     };
     this.setPlayerState = this.setPlayerState.bind(this);
     this.renderMessage = this.renderMessage.bind(this);
@@ -22,16 +23,26 @@ class Feedback extends Component {
   }
 
   renderMessage() {
-    const { assertions } = this.state;
+    const { assertions, score } = this.state;
     const MINIMAL_ASSERTIONS = 3;
+    let feedbackMessage;
     if (assertions >= MINIMAL_ASSERTIONS) {
-      return (
-        <h1 data-testid="feedback-text">Mandou bem!</h1>
-      );
+      feedbackMessage = <h1 data-testid="feedback-text">Mandou bem!</h1>;
+    } else {
+      feedbackMessage = <h1 data-testid="feedback-text">Podia ser melhor...</h1>;
     }
-    return (
-      <h1 data-testid="feedback-text">Podia ser melhor...</h1>
+    const feedbackInfo = (
+      <div className="feeback-container">
+        { feedbackMessage }
+        <h2 data-testid="feedback-total-score">{score}</h2>
+        <h2
+          data-testid="feedback-total-question"
+        >
+          {assertions}
+        </h2>
+      </div>
     );
+    return feedbackInfo;
   }
 
   render() {
