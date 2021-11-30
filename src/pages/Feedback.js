@@ -1,5 +1,7 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 class Feedback extends Component {
   constructor() {
@@ -12,6 +14,7 @@ class Feedback extends Component {
     };
     this.setPlayerState = this.setPlayerState.bind(this);
     this.renderMessage = this.renderMessage.bind(this);
+    this.setRanking = this.setRanking.bind(this);
   }
 
   componentDidMount() {
@@ -21,6 +24,20 @@ class Feedback extends Component {
 
   setPlayerState(player) {
     this.setState(player);
+  }
+
+  setRanking() {
+    const { name, score, gravatarEmail } = this.props;
+    const player = {
+      name,
+      score,
+      gravatarEmail,
+    };
+
+    const ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
+    ranking.push(player);
+    ranking.sort((a, b) => (b.score - a.score));
+    localStorage.setItem('ranking', JSON.stringify(ranking));
   }
 
   renderMessage() {
@@ -33,7 +50,7 @@ class Feedback extends Component {
       feedbackMessage = <h1 data-testid="feedback-text">Podia ser melhor...</h1>;
     }
     const feedbackInfo = (
-      <div className="feeback-container">
+      <div className="feedback-container">
         { feedbackMessage }
         <h2 data-testid="feedback-total-score">{score}</h2>
         <h2
@@ -61,10 +78,21 @@ class Feedback extends Component {
           <p data-testid="header-score">{score}</p>
         </header>
         <Link to="/">
-          <button type="button" data-testid="btn-play-again">Jogar novamente</button>
+          <button
+            type="button"
+            data-testid="btn-play-again"
+          >
+            Jogar novamente
+          </button>
         </Link>
         <Link to="/ranking">
-          <button type="button" data-testid="btn-ranking">Ranking</button>
+          <button
+            type="button"
+            data-testid="btn-ranking"
+            onClick={ this.setRanking }
+          >
+            Ranking
+          </button>
         </Link>
         { this.renderMessage() }
       </>
@@ -72,4 +100,16 @@ class Feedback extends Component {
   }
 }
 
-export default Feedback;
+Feedback.propTypes = {
+  gravatarEmail: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  name: state.login.name,
+  score: state.login.score,
+  gravatarEmail: state.login.gravatar,
+});
+
+export default connect(mapStateToProps, null)(Feedback);

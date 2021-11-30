@@ -66,10 +66,24 @@ body {
   flex-direction: column;
 }
 
-.correct-answer-color {
-  border: 3px solid rgb(6, 240, 15);
+#correct-answer {
+  border: 3px solid black;
 }
 
-.incorrect-answer-color {
-  border: 3px solid red;
+.incorrect-answer {
+  border: 3px solid black;
+}
+
+.feedback-header {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.answers-container {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
