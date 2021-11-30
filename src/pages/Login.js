@@ -12,6 +12,8 @@ class Login extends Component {
     this.state = {
       name: '',
       email: '',
+      score: 0,
+      assertions: 0,
       isDisabled: true,
     };
 

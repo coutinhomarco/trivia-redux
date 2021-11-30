@@ -29,14 +29,14 @@ class Trivia extends Component {
   componentDidMount() {
     const { login, dispatchRequest } = this.props;
     const { name, gravatar: gravatarEmail } = login;
-    const { points, score } = this.state;
+    const { points } = this.state;
     this.startTimer();
     dispatchRequest();
     const state = {
       player: {
         name,
         assertions: points,
-        score,
+        score: 0,
         gravatarEmail,
       },
     };
@@ -84,24 +84,24 @@ class Trivia extends Component {
   }
 
   resetBorderColor() {
-    const correctAnswer = document.getElementsByClassName('correct-answer-color');
+    const correctAnswer = document.getElementById('correct-answer');
     const incorrectAnswers = [
-      ...document.getElementsByClassName('incorrect-answer-color'),
+      ...document.getElementsByClassName('incorrect-answer'),
     ];
-    correctAnswer[0].className = 'correct-answer';
+    correctAnswer.style.border = '3px solid black';
     incorrectAnswers.forEach((incorrectAnswer) => {
-      incorrectAnswer.className = 'incorrect-answer';
+      incorrectAnswer.style.border = '3px solid black';
     });
   }
 
   changeBorderColor() {
-    const correctAnswer = document.getElementsByClassName('correct-answer');
+    const correctAnswer = document.getElementById('correct-answer');
     const incorrectAnswers = [
       ...document.getElementsByClassName('incorrect-answer'),
     ];
-    correctAnswer[0].className = 'correct-answer-color';
+    correctAnswer.style.border = '3px solid rgb(6, 240, 15)';
     incorrectAnswers.forEach((incorrectAnswer) => {
-      incorrectAnswer.className = 'incorrect-answer-color';
+      incorrectAnswer.style.border = '3px solid red';
     });
   }
 
@@ -179,7 +179,7 @@ class Trivia extends Component {
                 return (
                   (
                     <button
-                      className="correct-answer"
+                      id="correct-answer"
                       key={ index }
                       onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
                       type="button"
