@@ -84,7 +84,7 @@ class Trivia extends Component {
   }
 
   resetBorderColor() {
-    const correctAnswer = document.getElementById('correct-answer');
+    const correctAnswer = document.querySelector('.correct-answer');
     const incorrectAnswers = [
       ...document.getElementsByClassName('incorrect-answer'),
     ];
@@ -95,7 +95,7 @@ class Trivia extends Component {
   }
 
   changeBorderColor() {
-    const correctAnswer = document.getElementById('correct-answer');
+    const correctAnswer = document.querySelector('.correct-answer');
     const incorrectAnswers = [
       ...document.getElementsByClassName('incorrect-answer'),
     ];
@@ -179,7 +179,7 @@ class Trivia extends Component {
                 return (
                   (
                     <button
-                      id="correct-answer"
+                      className="correct-answer"
                       key={ index }
                       onClick={ () => this.checkAnswer(answer, questions, questionIndex) }
                       type="button"
