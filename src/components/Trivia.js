@@ -1,3 +1,6 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-lines-per-function */
+/* eslint-disable jsx-a11y/control-has-associated-label *//* eslint-disable react/no-danger *//* eslint-disable semi */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -15,7 +18,6 @@ class Trivia extends Component {
       timer: 30,
       isDisabled: false,
       answer: false,
-      // nextBtn: false,
     };
     this.renderQuestions = this.renderQuestions.bind(this);
     this.renderNextQuestion = this.renderNextQuestion.bind(this);
@@ -68,7 +70,6 @@ class Trivia extends Component {
     const timerInterval = setInterval(() => {
       const { timer, answer } = this.state;
       if (timer === 0 || answer) {
-        // Source: https://stackoverflow.com/a/49471404
         clearInterval(timerInterval);
         this.setState({
           isDisabled: true,
@@ -110,7 +111,6 @@ class Trivia extends Component {
     this.changeBorderColor();
     this.setState({
       isDisabled: false,
-      // nextBtn: true,
     });
     const { timer } = this.state;
     if (questions[questionIndex].correct_answer === answer) {
@@ -168,13 +168,19 @@ class Trivia extends Component {
     if (questionIndex <= NUMBER_OF_QUESTIONS) {
       const correctAnswer = questions[questionIndex].correct_answer;
       const incorrectAnswers = questions[questionIndex].incorrect_answers;
+      const innerHTML2 = {
+        __html: questions[questionIndex].question,
+      }
       const answers = [...incorrectAnswers, correctAnswer];
       return (
         <>
           <p data-testid="question-category">{questions[questionIndex].category}</p>
-          <p data-testid="question-text">{questions[questionIndex].question}</p>
+          <p data-testid="question-text" dangerouslySetInnerHTML={ innerHTML2 } />
           <div className="answers-container">
             {answers.sort().map((answer, index) => {
+              const innerHTML = {
+                __html: answer,
+              };
               if (answer === correctAnswer) {
                 return (
                   (
@@ -185,9 +191,8 @@ class Trivia extends Component {
                       type="button"
                       data-testid="correct-answer"
                       disabled={ isDisabled }
-                    >
-                      {answer}
-                    </button>
+                      dangerouslySetInnerHTML={ innerHTML }
+                    />
                   )
                 );
               }
