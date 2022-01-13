@@ -42,6 +42,22 @@ body {
   color: #61dafb;
 }
 
+img{
+  margin-top: 10px;
+}
+
+.login-form{
+  margin: 15px;
+}
+
+.login-form input{
+  border-radius: 5px;
+}
+
+.login-form-button{
+  margin: 10px 0;
+}
+
 @keyframes shake {
 
   10%, 90% {

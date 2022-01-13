@@ -97,6 +97,7 @@ class Login extends Component {
             id="name"
             name="name"
             type="text"
+            placeholder="Jogador"
             required
             defaultValue={ name }
           />
@@ -107,6 +108,7 @@ class Login extends Component {
             data-testid="input-gravatar-email"
             id="email"
             name="email"
+            placeholder="Email"
             type="email"
             required
             defaultValue={ email }
@@ -123,13 +125,6 @@ class Login extends Component {
           Jogar
         </button>
 
-        <button
-          type="button"
-          data-testid="btn-settings"
-          onClick={ this.onSettingsClick }
-        >
-          Configurações
-        </button>
       </form>
     );
   }
