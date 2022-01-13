@@ -204,9 +204,8 @@ class Trivia extends Component {
                   type="button"
                   data-testid={ `wrong-answer-${incorrectAnswers.indexOf(answer)}` }
                   disabled={ isDisabled }
-                >
-                  {answer}
-                </button>
+                  dangerouslySetInnerHTML={ innerHTML }
+                />
               );
             })}
           </div>
