@@ -7,22 +7,23 @@ class Ranking extends Component {
     return (
       <div>
         <h1 data-testid="ranking-title">Ranking</h1>
+
+        <div id="ranking-titles">
+          <p>Colocação</p>
+          <p>Pontuação</p>
+          <p>Jogador</p>
+        </div>
         {
           ranking.map(({ name, score, gravatarEmail }, index) => (
-            <div key={ `${name} + ${score}` } className="feedback-header">
-              <h1>{ index }</h1>
-              {/* {
-                (index > 0 ? score === ranking[index - 1].score : null)
-                  ? <h1>{ index - 1 }</h1>
-                  : <h1>{ index }</h1>
-              } */}
-
-              <h3 data-testid={ `player-score-${index}` }>{score}</h3>
-              <h2 data-testid={ `player-name-${index}` }>{name}</h2>
-              <img src={ gravatarEmail } alt={ index } />
-            </div>
+            <tr key={ `${name} + ${score}` } className="feedback-header">
+              <td>{ index + 1 }</td>
+              <td data-testid={ `player-score-${index}` }>{score}</td>
+              <td data-testid={ `player-name-${index}` }>{name}</td>
+              <td><img src={ gravatarEmail } alt={ index } /></td>
+            </tr>
           ))
         }
+
         <div>
           <Link to="/">
             <button
