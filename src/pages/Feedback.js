@@ -41,7 +41,7 @@ class Feedback extends Component {
   }
 
   renderMessage() {
-    const { assertions, score } = this.state;
+    const { assertions } = this.state;
     const MINIMAL_ASSERTIONS = 3;
     let feedbackMessage;
     if (assertions >= MINIMAL_ASSERTIONS) {
@@ -52,11 +52,11 @@ class Feedback extends Component {
     const feedbackInfo = (
       <div className="feedback-container">
         { feedbackMessage }
-        <h2 data-testid="feedback-total-score">{score}</h2>
+        {/* <h2 data-testid="feedback-total-score">{score}</h2> */}
         <h2
           data-testid="feedback-total-question"
         >
-          {assertions}
+          {`Acertos: ${assertions}`}
         </h2>
       </div>
     );
@@ -75,7 +75,7 @@ class Feedback extends Component {
             alt="Gravatar"
           />
           <p data-testid="header-player-name">{name}</p>
-          <p data-testid="header-score">{score}</p>
+          <p data-testid="header-score">{`Pontuação: ${score}`}</p>
         </header>
         <Link to="/">
           <button

@@ -1,6 +1,5 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-lines-per-function */
-/* eslint-disable jsx-a11y/control-has-associated-label *//* eslint-disable react/no-danger *//* eslint-disable semi */
+/* eslint-disable jsx-a11y/control-has-associated-label */
+// Tive de desativar o lint para utilizar as strings obtidas via API sem sanitizar
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -62,8 +61,7 @@ class Trivia extends Component {
 
   stopTimer() {
     this.setState({
-      answer: true,
-    });
+      answer: true });
   }
 
   startTimer() {
@@ -166,22 +164,20 @@ class Trivia extends Component {
     const { questionIndex, isDisabled } = this.state;
     const { questions, history } = this.props;
     if (questionIndex <= NUMBER_OF_QUESTIONS) {
-      const correctAnswer = questions[questionIndex].correct_answer;
       const incorrectAnswers = questions[questionIndex].incorrect_answers;
       const innerHTML2 = {
         __html: questions[questionIndex].question,
-      }
-      const answers = [...incorrectAnswers, correctAnswer];
+      };
+      const answers = [...questions[questionIndex].incorrect_answers,
+        questions[questionIndex].correct_answer];
       return (
         <>
           <p data-testid="question-category">{questions[questionIndex].category}</p>
           <p data-testid="question-text" dangerouslySetInnerHTML={ innerHTML2 } />
           <div className="answers-container">
             {answers.sort().map((answer, index) => {
-              const innerHTML = {
-                __html: answer,
-              };
-              if (answer === correctAnswer) {
+              const innerHTML = { __html: answer };
+              if (answer === questions[questionIndex].correct_answer) {
                 return (
                   (
                     <button
