@@ -13,6 +13,9 @@ Penúltimo projeto em grupo do módulo de Front End, feito em grupo durante curs
 </ul>
 <hr>
 <h4>Confira remotamente:</h4> <a href="https://trivia-redux-eight.vercel.app/" targe='_blank'>Clique aqui</a>
+<br>
+Digite um email válido (Exemplo: teste@teste.com)
+e seu nome
 <hr>
 
 <h4>Teste na sua máquina!</h4>
